@@ -27,7 +27,7 @@ def colorSensor():
         text = ColorSensor.COLORS[color]
         sound.speak(text)
 
-def reverse():
+def move():
     motor_pair = MoveSteering(OUTPUT_B, OUTPUT_C)
     touch_sensor = TouchSensor()
 
@@ -108,7 +108,7 @@ def main():
     debug_print('Hello VS Code!')
 
     # colorSensor()
-    reverse()
+    move()
     # touchLeds()
 
 
