@@ -1,0 +1,13 @@
+Hello VS Code!
+Traceback (most recent call last):
+  File "/home/robot/Jigglypuff/main.py", line 116, in <module>
+    main()
+  File "/home/robot/Jigglypuff/main.py", line 111, in main
+    reverse()
+  File "/home/robot/Jigglypuff/main.py", line 45, in reverse
+    motor_pair.on_for_rotations(steering=-300, speed=15, rotations=0.5)
+  File "/usr/lib/python3/dist-packages/ev3dev2/motor.py", line 1889, in on_for_rotations
+    (left_speed, right_speed) = self.get_speed_steering(steering, speed)
+  File "/usr/lib/python3/dist-packages/ev3dev2/motor.py", line 1934, in get_speed_steering
+    "%{} is an invalid steering, must be between -100 and 100 (inclusive)".format(steering)
+AssertionError: %-300 is an invalid steering, must be between -100 and 100 (inclusive)
