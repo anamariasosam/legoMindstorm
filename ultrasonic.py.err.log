@@ -1,9 +1,11 @@
 Hello VS Code!
 Traceback (most recent call last):
-  File "/home/robot/Jigglypuff/ultrasonic.py", line 82, in <module>
+  File "/home/robot/Jigglypuff/ultrasonic.py", line 116, in <module>
     main()
-  File "/home/robot/Jigglypuff/ultrasonic.py", line 78, in main
-    move()
-  File "/home/robot/Jigglypuff/ultrasonic.py", line 36, in move
-    reverse(motor_pair)
-TypeError: reverse() takes 0 positional arguments but 1 was given
+  File "/home/robot/Jigglypuff/ultrasonic.py", line 110, in main
+    move(motor_pair, color_sensor, andar, sound)
+  File "/home/robot/Jigglypuff/ultrasonic.py", line 52, in move
+    reverse(motor_pair, sound, -100, 2)
+  File "/home/robot/Jigglypuff/ultrasonic.py", line 20, in reverse
+    Sound.play('doh.wav')
+TypeError: play() missing 1 required positional argument: 'wav_file'
