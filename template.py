@@ -22,17 +22,21 @@ def reset_console():
     '''Resets the console to the default state'''
     print('\x1Bc', end='')
 
+def constructor():
+    color_sensor = ColorSensor()
+    sound = Sound()
+
+    return color_sensor, sound
 
 def main():
-    '''The main function of our program'''
-
     # set the console just how we want it
     reset_console()
-
 
     # print something to the output panel in VS Code
     debug_print('Start program')
 
-         
+    color_sensor, sound = constructor()
+
+        
 if __name__ == '__main__':
     main()
