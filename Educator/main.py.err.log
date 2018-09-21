@@ -1,15 +1,9 @@
 Start program
 Traceback (most recent call last):
-  File "/home/robot/Jigglypuff/Educator/main.py", line 81, in <module>
+  File "/home/robot/Educator/main.py", line 88, in <module>
     main()
-  File "/home/robot/Jigglypuff/Educator/main.py", line 76, in main
-    square(motor_pair)
-  File "/home/robot/Jigglypuff/Educator/main.py", line 48, in square
-    motor_pair.on_for_degrees(degrees=45, speed=5, steering=-100)
-  File "/usr/lib/python3/dist-packages/ev3dev2/motor.py", line 1899, in on_for_degrees
-    MoveTank.on_for_degrees(self, SpeedNativeUnits(left_speed), SpeedNativeUnits(right_speed), degrees, brake, block)
-  File "/usr/lib/python3/dist-packages/ev3dev2/motor.py", line 1804, in on_for_degrees
-    self.left_motor._set_position_degrees(left_speed_native_units, left_degrees)
-  File "/usr/lib/python3/dist-packages/ev3dev2/motor.py", line 869, in _set_position_degrees
-    assert degrees >= 0, "degrees is %s, must be >= 0" % degrees
-AssertionError: degrees is -45.0, must be >= 0
+  File "/home/robot/Educator/main.py", line 79, in main
+    color_sensor, sound, motor_pair, touch_sensor, ultrasonic_sensor = constructor()
+  File "/home/robot/Educator/main.py", line 32, in constructor
+    return color_sensor, sound, motor_pair, touch_sensor, ultrasonic_sensor
+NameError: name 'color_sensor' is not defined

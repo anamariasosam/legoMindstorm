@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+|#!/usr/bin/env python3
 '''Hello to the world from ev3dev.org'''
 
 import os
@@ -23,27 +23,32 @@ def reset_console():
     print('\x1Bc', end='')
 
 def constructor():
-    color_sensor = ColorSensor()
+    # color_sensor = ColorSensor()
     sound = Sound()
     motor_pair = MoveSteering(OUTPUT_B, OUTPUT_C)
-    touch_sensor = TouchSensor()
+    # touch_sensor = TouchSensor()
     ultrasonic_sensor = UltrasonicSensor()
 
-    return color_sensor, sound, motor_pair, touch_sensor, ultrasonic_sensor
+    return sound, motor_pair, ultrasonic_sensor
 
 def color(color_sensor, sound):
     color = color_sensor.color
     text = ColorSensor.COLORS[color]
     sound.speak(text)
 
+def turnLeft(motor_pair):
+    motor_pair.on_for_rotations(steering=-100, speed=50, rotations=0.5)
+    motor_pair.on_for_rotations(steering=-100, speed=50, rotations=0.5)
+    motor_pair.on_for_rotations(steering=-100, speed=50, rotations=0.5)
+    motor_pair.on_for_rotations(steering=-100, speed=50, rotations=0.5)
+    motor_pair.on_for_rotations(steering=-80, speed=50, rotations=0.5)
 
 def square(motor_pair):
     for i in range(4):
         # Move robot forward for 3 seconds
-        motor_pair.on_for_seconds(steering=0, speed=50, seconds=2)
+        motor_pair.on_for_seconds(steering=0, speed=50, seconds=4)
 
-        motor_pair.on_for_rotations(steering=-100, speed=5, rotations=0.5)
-        motor_pair.on_for_rotations(steering=-45, speed=5, rotations=0.5)
+        turnLeft(motor_pair)
         
 def run(motor_pair, ultrasonic_sensor):
     while True:
@@ -76,12 +81,14 @@ def main():
     # print something to the output panel in VS Code
     debug_print('Start program')
 
-    color_sensor, sound, motor_pair, touch_sensor, ultrasonic_sensor = constructor()
+    sound, motor_pair, ultrasonic_sensor = constructor()
     sound.beep()
 
     # color(color_sensor, sound)
-    run(motor_pair, ultrasonic_sensor)
+    # run(motor_pair, ultrasonic_sensor)
     # move(motor_pair, touch_sensor)
+
+    square(motor_pair)
 
         
 if __name__ == '__main__':

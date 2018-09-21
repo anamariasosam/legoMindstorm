@@ -1,0 +1,7 @@
+Start program
+Traceback (most recent call last):
+  File "/home/robot/Educator/parcial.py", line 66, in <module>
+    main()
+  File "/home/robot/Educator/parcial.py", line 61, in main
+    run(sound, motor_pair, ts1, ts2, motor)
+NameError: name 'motor' is not defined
