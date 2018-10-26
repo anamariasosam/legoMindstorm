@@ -1,0 +1,9 @@
+Hello VS Code!
+Traceback (most recent call last):
+  File "/home/robot/Persecucion/pure_pursuit.py", line 75, in <module>
+    main()
+  File "/home/robot/Persecucion/pure_pursuit.py", line 71, in main
+    move(motor_pair, gyro)
+  File "/home/robot/Persecucion/pure_pursuit.py", line 22, in move
+    motor_pair.on_for_degrees(speed=-10, degrees=90)
+TypeError: on_for_degrees() missing 1 required positional argument: 'steering'
