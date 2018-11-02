@@ -3,31 +3,45 @@
 
 import os
 import sys
-from ev3dev2.motor import (MoveSteering, OUTPUT_B, OUTPUT_C)
-from ev3dev2.sensor.lego import UltrasonicSensor
 from ev3dev2.sensor import INPUT_1, INPUT_4
-from ev3dev2.sensor.lego import TouchSensor
 from time import sleep
-from ev3dev2.sensor.lego import ColorSensor
-from ev3dev2.sound import Sound
-from ev3dev2.motor import MoveSteering, OUTPUT_B, OUTPUT_C
+from ev3dev2.motor import LargeMotor, OUTPUT_B, OUTPUT_C
 from ev3dev2.sensor.lego import GyroSensor
+import math
 
 # state constants
 ON = True
 OFF = False
 
-def move():
-    # motor_pair.on(steering=0, speed=10
+
+def caminar(ruedaDerecha, ruedaIzquierda, gyro):
+    ruedaDerecha.run_timed(time_sp = 1000, speed_sp = 460)
+    ruedaIzquierda.run_timed(time_sp = 1000, speed_sp = 460)
+    angulo = gyro.value()
 
 
-def girarAngulo(tetha):
-    tetha_grados = math.degrees(tetha)
-    mover = gyro.value() - tetha_grados
-    
-    motor_pair.on_for_rotations(steering=-100, speed=50, rotations=0.5)
-    motor_pair.on_for_rotations(steering=-100, speed=50, rotations=0.5)  
-    
+def girar(ang, tetha, ruedaDerecha, ruedaIzquierda, gyro):
+    diferencia =  ang - tetha
+    while math.fabs(math.fabs(ang) - math.fabs(tetha)) > 10:
+        if diferencia > 0:
+            ruedaDerecha.run_timed(time_sp = 40, speed_sp = -460)
+            ruedaIzquierda.run_timed(time_sp = 40, speed_sp = 460)
+        else:
+            ruedaDerecha.run_timed(time_sp = 40, speed_sp = 460)
+            ruedaIzquierda.run_timed(time_sp = 40, speed_sp =-460)
+        ang = gyro.value()
+        sleep(1)
+
+def persecusionPura(tetha, x, y, v, Xob, Yob, l, movimientosX, movimientosY):
+    x = -v * math.sin(tetha) + x
+    y = v * math.cos(tetha) + y
+    deltaX = (Xob - x) * math.cos(tetha) + (Yob - y) * math.sin(tetha)
+    curvatura = -(2 * deltaX)/(l**2)
+    tetha += v * curvatura
+    movimientosX.append(x)
+    movimientosY.append(y)
+    return tetha,x,y
+
 
 def debug_print(*args, **kwargs):
     '''Print debug messages to stderr.
@@ -60,51 +74,38 @@ def main():
     set_cursor(OFF)
     set_font('Lat15-Terminus24x12')
 
-
     # print something to the output panel in VS Code
     debug_print('Hello VS Code!')
-    
 
-    
+    Xob = 12
+    Yob = 12
+    v = 0.5
+    x = 0
+    y = 0
+    tetha = 0
+    l = 4
+    movimientosX = [x]
+    movimientosY = [y]
 
-    persecucion()
+    ruedaDerecha = LargeMotor('outC')
+    ruedaIzquierda = LargeMotor('outB')
+
+    gyro = GyroSensor()
+    gyro.mode = 'GYRO-RATE'
+    gyro.mode = 'GYRO-ANG'
+    sleep(1)
+    while True:
+        print(gyro.value())
+        tetha,x,y = persecusionPura(tetha, x, y, v, Xob, Yob, l, movimientosX, movimientosY)
+        tetha = math.degrees(tetha)
+        ang = gyro.value()
+        girar(ang, tetha, ruedaDerecha, ruedaIzquierda, gyro)
+        caminar(ruedaDerecha, ruedaIzquierda, gyro)
+        sleep(1)
+        if math.fabs(x) >= Xob or math.fabs(y) >= Yob:
+            break
+
     
 
 if __name__ == '__main__':
     main()
-
-
-def persecucion():
-    Xob = 8
-    Yob = 8
-    v = 2
-
-    x = 0
-    y = 0.5
-
-    tetha = 0
-    L = 1
-
-    xc = [0]
-    yc = [0.5]
-
-    motor = MoveSteering(OUTPUT_B, OUTPUT_C)
-    gyro = GyroSensor()
-    gyro.mode = GyroSensor.MODE_GYRO_ANG
-    gyro.reset()
-
-    while True:
-        x = -v * math.sin(tetha) + x
-         = v * math.cos(tetha) + y
-        deltaX = (Xob - x) * math.cos(tetha) + (Yob - y) * math.sin(tetha)
-        curvatura = -(2 * deltaX)/(L**2)
-        tetha += v * curvatura
-        girarAngulo(tetha)
-        move(motor, gyro)
-        xc.append(x)
-        yc.append(y)
-        print(deltaX,curvatura, math.degrees(tetha))
-        if math.fabs(x) >= Xob or math.fabs(y) >= Yob:
-            break
-
- 
