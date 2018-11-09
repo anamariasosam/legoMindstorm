@@ -13,35 +13,19 @@ import math
 ON = True
 OFF = False
 
+def avanzar(motor_pair, gy):
+    motor_pair.on_for_seconds(steering=0, speed=50, seconds=1)
+	angle = gy.value()
 
-def caminar(ruedaDerecha, ruedaIzquierda, gyro):
-    ruedaDerecha.run_timed(time_sp = 1000, speed_sp = 460)
-    ruedaIzquierda.run_timed(time_sp = 1000, speed_sp = 460)
-    angulo = gyro.value()
+def girar(tetha, gy, ang, motor_pair):
+	tetha = math.degrees(tetha)
+	ang = gy.value()
+	diferenciaDeAngulos = ang - tetha
 
-
-def girar(ang, tetha, ruedaDerecha, ruedaIzquierda, gyro):
-    diferencia =  ang - tetha
-    while math.fabs(math.fabs(ang) - math.fabs(tetha)) > 10:
-        if diferencia > 0:
-            ruedaDerecha.run_timed(time_sp = 40, speed_sp = -460)
-            ruedaIzquierda.run_timed(time_sp = 40, speed_sp = 460)
-        else:
-            ruedaDerecha.run_timed(time_sp = 40, speed_sp = 460)
-            ruedaIzquierda.run_timed(time_sp = 40, speed_sp =-460)
-        ang = gyro.value()
+	while math.fabs(math.fabs(ang) - math.fabs(tetha)) > 10:
+        motor_pair.on_for_rotations(steering=5, speed=10, rotations=0.5)
+        ang = gy.value()
         sleep(1)
-
-def persecusionPura(tetha, x, y, v, Xob, Yob, l, movimientosX, movimientosY):
-    x = -v * math.sin(tetha) + x
-    y = v * math.cos(tetha) + y
-    deltaX = (Xob - x) * math.cos(tetha) + (Yob - y) * math.sin(tetha)
-    curvatura = -(2 * deltaX)/(l**2)
-    tetha += v * curvatura
-    movimientosX.append(x)
-    movimientosY.append(y)
-    return tetha,x,y
-
 
 def debug_print(*args, **kwargs):
     '''Print debug messages to stderr.
@@ -77,35 +61,42 @@ def main():
     # print something to the output panel in VS Code
     debug_print('Hello VS Code!')
 
-    Xob = 12
-    Yob = 12
-    v = 0.5
+    Xob = 8
+    Yob = 8
+    v = 1
     x = 0
     y = 0
     tetha = 0
     l = 4
-    movimientosX = [x]
-    movimientosY = [y]
+    xc = [x]
+    yc = [y]
 
-    ruedaDerecha = LargeMotor('outC')
-    ruedaIzquierda = LargeMotor('outB')
+    motor_pair = MoveSteering(OUTPUT_B, OUTPUT_C)
 
-    gyro = GyroSensor()
-    gyro.mode = 'GYRO-RATE'
-    gyro.mode = 'GYRO-ANG'
+    gy = GyroSensor()
+    gy.mode = 'GYRO-RATE'
+    gy.mode = 'GYRO-ANG'
+
+    units = gy.units
+
+    angle = gy.value()
+    print(str(angle))
     sleep(1)
+
     while True:
-        print(gyro.value())
-        tetha,x,y = persecusionPura(tetha, x, y, v, Xob, Yob, l, movimientosX, movimientosY)
-        tetha = math.degrees(tetha)
-        ang = gyro.value()
-        girar(ang, tetha, ruedaDerecha, ruedaIzquierda, gyro)
-        caminar(ruedaDerecha, ruedaIzquierda, gyro)
+        x = -v * math.sin(tetha) + x
+        y = v * math.cos(tetha) + y
+        deltaX = (Xob - x) * math.cos(tetha) + (Yob - y) * math.sin(tetha)
+        curvatura = -(2 * deltaX)/(l**2)
+        tetha += v * curvatura
+        xc.append(x)
+        yc.append(y)    
+        girar(tetha, gy, ang, motor_pair)
+        avanzar(motor_pair, gy)
         sleep(1)
+        print(str(x) + " - " + str(y))
         if math.fabs(x) >= Xob or math.fabs(y) >= Yob:
             break
-
-    
 
 if __name__ == '__main__':
     main()

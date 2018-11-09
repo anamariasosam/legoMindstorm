@@ -1,4 +1,0 @@
-  File "/home/robot/Persecucion/patri.py", line 35
-    angle = gy.value()
-                     ^
-IndentationError: unindent does not match any outer indentation level

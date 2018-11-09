@@ -8,9 +8,9 @@ from ev3dev2.motor import (MoveSteering, OUTPUT_B, OUTPUT_C)
 from ev3dev2.sensor.lego import GyroSensor
 import math
 
-Xob = 12
-Yob = 12
-v = .5
+Xob = 8
+Yob = 8
+v = 1
 x = 0
 y = 0
 tetha = 0
@@ -42,7 +42,7 @@ def girar(tetha):
 	diferenciaDeAngulos = ang - tetha
 
 	while math.fabs(math.fabs(ang) - math.fabs(tetha)) > 10:
-			motor_pair.on_for_rotations(steering=20, speed=10, rotations=0.5)
+			motor_pair.on_for_rotations(steering=5, speed=10, rotations=0.5)
 			ang = gy.value()
 			print(str(tetha) + " - " + str(ang))
 			sleep(1)
@@ -58,5 +58,6 @@ while True:
 	girar(tetha)
 	avanzar()
 	sleep(1)
+	print(str(x) + " - " + str(y))
 	if math.fabs(x) >= Xob or math.fabs(y) >= Yob:
 			break
